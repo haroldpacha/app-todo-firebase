@@ -84,7 +84,7 @@ export default function TaskList({ tasks, onToggleTask }: TaskListProps) {
               <div className="flex gap-3 mt-1">
                 {task.cost !== undefined && (
                   <div className="flex items-center gap-1 text-sm text-gray-600">
-                    <DollarSign className="w-4 h-4" />
+                    {'S/ '}
                     {task.cost.toFixed(2)}
                   </div>
                 )}
