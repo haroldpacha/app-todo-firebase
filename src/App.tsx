@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { ListTodo, PlusCircle } from 'lucide-react';
+import { ListTodo, PlusCircle, BarChart } from 'lucide-react';
 import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
 import PriorityFilter from './components/PriorityFilter';
 import { Task } from './types';
 import { addTask, getTasks, toggleTask } from './lib/tasks';
+import StatsModal from './components/StatsModal';
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isStatsOpen, setIsStatsOpen] = useState(false);
   const [selectedPriority, setSelectedPriority] = useState<number | null>(null);
 
   const fetchTasks = async () => {
@@ -55,13 +57,22 @@ function App() {
             <ListTodo className="w-8 h-8 text-indigo-600" />
             <h1 className="text-3xl font-bold text-gray-800">Task Manager</h1>
           </div>
-          <button
-            onClick={() => setIsFormOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            <PlusCircle className="w-5 h-5" />
-            Nueva Tarea
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setIsStatsOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-white text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors border border-indigo-200"
+            >
+              <BarChart className="w-5 h-5" />
+              Estadísticas
+            </button>
+            <button
+              onClick={() => setIsFormOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              <PlusCircle className="w-5 h-5" />
+              Nueva Tarea
+            </button>
+          </div>
         </header>
 
         <PriorityFilter
@@ -75,6 +86,10 @@ function App() {
 
         {isFormOpen && (
           <TaskForm onSubmit={handleAddTask} onClose={() => setIsFormOpen(false)} />
+        )}
+
+        {isStatsOpen && (
+          <StatsModal tasks={tasks} onClose={() => setIsStatsOpen(false)} />
         )}
       </div>
     </div>
