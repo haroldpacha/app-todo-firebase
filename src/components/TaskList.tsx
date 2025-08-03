@@ -6,6 +6,7 @@ import clsx from 'clsx';
 interface TaskListProps {
   tasks: Task[];
   onToggleTask: (id: string) => void;
+  onArchiveTask?: (id: string, archived: boolean) => void;
 }
 
 const getCategoryIcon = (category: string) => {
@@ -48,7 +49,7 @@ const formatTime = (minutes: number) => {
   return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}min` : `${hours}h`;
 };
 
-export default function TaskList({ tasks, onToggleTask }: TaskListProps) {
+export default function TaskList({ tasks, onToggleTask, onArchiveTask }: TaskListProps) {
   return (
     <div className="space-y-4">
       {tasks.map((task) => (
@@ -121,13 +122,21 @@ export default function TaskList({ tasks, onToggleTask }: TaskListProps) {
               {getCategoryIcon(task.category)}
               <span className="text-sm font-medium">{task.category}</span>
             </div>
+            {/* Botón archivar/desarchivar */}
+            {typeof task.archived !== 'undefined' && onArchiveTask && (
+              <button
+                className={clsx('ml-2 px-2 py-1 rounded text-xs font-medium',
+                  task.archived ? 'bg-gray-300 text-gray-700' : 'bg-indigo-100 text-indigo-800 hover:bg-indigo-200')}
+                onClick={() => onArchiveTask(task.id, !task.archived)}
+              >{task.archived ? 'Desarchivar' : 'Archivar'}</button>
+            )}
           </div>
         </div>
       ))}
 
       {tasks.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500">No hay tareas pendientes</p>
+          <p className="text-gray-500">No hay tareas {typeof tasks[0]?.archived !== 'undefined' && tasks[0]?.archived ? 'archivadas' : 'pendientes'}</p>
         </div>
       )}
     </div>

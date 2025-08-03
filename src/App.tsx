@@ -46,6 +46,7 @@ function App() {
   };
 
   const [showCompleted, setShowCompleted] = useState<'all' | 'completed' | 'pending'>('all');
+  const [activeTab, setActiveTab] = useState<'active' | 'archived'>('active');
   const filteredTasks = tasks.filter(task => {
     const priorityMatch = selectedPriority ? task.priority === selectedPriority : true;
     const completedMatch = showCompleted === 'all'
@@ -53,7 +54,8 @@ function App() {
       : showCompleted === 'completed'
         ? task.completed
         : !task.completed;
-    return priorityMatch && completedMatch;
+    const archivedMatch = activeTab === 'active' ? !task.archived : !!task.archived;
+    return priorityMatch && completedMatch && archivedMatch;
   });
 
   return (
@@ -89,8 +91,21 @@ function App() {
           onCompletedChange={setShowCompleted}
         />
 
+        <div className="flex gap-2 mb-4">
+          <button
+            className={`px-4 py-2 rounded-md font-medium transition-colors ${activeTab === 'active' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`}
+            onClick={() => setActiveTab('active')}
+          >Tareas</button>
+          <button
+            className={`px-4 py-2 rounded-md font-medium transition-colors ${activeTab === 'archived' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`}
+            onClick={() => setActiveTab('archived')}
+          >Archivadas</button>
+        </div>
         <main className="mt-6">
-          <TaskList tasks={filteredTasks} onToggleTask={handleToggleTask} />
+          <TaskList tasks={filteredTasks} onToggleTask={handleToggleTask} onArchiveTask={async (id, archived) => {
+            // Aquí deberías implementar la lógica para archivar/desarchivar en tu backend
+            setTasks(tasks => tasks.map(task => task.id === id ? { ...task, archived } : task));
+          }} />
         </main>
 
         {isFormOpen && (

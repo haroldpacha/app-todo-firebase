@@ -6,4 +6,5 @@ export interface Task {
   completed: boolean;
   cost?: number;
   time?: number;
+  archived?: boolean;
 }
