@@ -45,9 +45,16 @@ function App() {
     }
   };
 
-  const filteredTasks = selectedPriority
-    ? tasks.filter(task => task.priority === selectedPriority)
-    : tasks;
+  const [showCompleted, setShowCompleted] = useState<'all' | 'completed' | 'pending'>('all');
+  const filteredTasks = tasks.filter(task => {
+    const priorityMatch = selectedPriority ? task.priority === selectedPriority : true;
+    const completedMatch = showCompleted === 'all'
+      ? true
+      : showCompleted === 'completed'
+        ? task.completed
+        : !task.completed;
+    return priorityMatch && completedMatch;
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 to-purple-100 p-8">
@@ -78,6 +85,8 @@ function App() {
         <PriorityFilter
           selectedPriority={selectedPriority}
           onChange={setSelectedPriority}
+          showCompleted={showCompleted}
+          onCompletedChange={setShowCompleted}
         />
 
         <main className="mt-6">
