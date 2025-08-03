@@ -1,8 +1,5 @@
-export async function updateTaskArchive(id: string, archived: boolean): Promise<void> {
-  const taskRef = ref(db, `tasks/${id}`);
-  await update(taskRef, { archived });
-}
-import { ref, get, set, update, push } from 'firebase/database';
+
+import { ref, get, set, update, push,query, orderByChild } from 'firebase/database';
 import { db } from './firebase';
 import { Task } from '../types';
 
@@ -10,13 +7,14 @@ const tasksRef = ref(db, 'tasks');
 
 export async function addTask(task: Omit<Task, 'id'>): Promise<Task> {
   const newTaskRef = push(tasksRef);
-  const newTask = { ...task, id: newTaskRef.key ?? '' };
+  const newTask = { ...task, id: newTaskRef.key ?? '', createdAt: Date.now() };
   await set(newTaskRef, newTask);
   return newTask;
 }
 
 export async function getTasks(): Promise<Task[]> {
-  const snapshot = await get(tasksRef);
+  const tasksQuery = query(ref(db, 'tasks'), orderByChild('createdAt'));
+  const snapshot = await get(tasksQuery);
   if (!snapshot.exists()) return [];
   
   const tasks: Task[] = [];
@@ -26,8 +24,9 @@ export async function getTasks(): Promise<Task[]> {
       ...childSnapshot.val()
     });
   });
-  
-  return tasks;
+
+  // Orden descendente (de más reciente a más antiguo)
+  return tasks.reverse();
 }
 
 export async function toggleTask(id: string): Promise<void> {
@@ -39,4 +38,9 @@ export async function toggleTask(id: string): Promise<void> {
       completed: !task.completed
     });
   }
+}
+
+export async function updateTaskArchive(id: string, archived: boolean): Promise<void> {
+  const taskRef = ref(db, `tasks/${id}`);
+  await update(taskRef, { archived });
 }

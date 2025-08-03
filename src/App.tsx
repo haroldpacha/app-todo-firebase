@@ -47,6 +47,7 @@ function App() {
 
   const [showCompleted, setShowCompleted] = useState<'all' | 'completed' | 'pending'>('all');
   const [activeTab, setActiveTab] = useState<'active' | 'archived'>('active');
+
   const filteredTasks = tasks.filter(task => {
     const priorityMatch = selectedPriority ? task.priority === selectedPriority : true;
     const completedMatch = showCompleted === 'all'
@@ -64,7 +65,7 @@ function App() {
         <header className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <ListTodo className="w-8 h-8 text-indigo-600" />
-            <h1 className="text-3xl font-bold text-gray-800">Task Manager</h1>
+            <h1 className="text-3xl font-bold text-gray-800">Administrador de Tareasx</h1>
           </div>
           <div className="flex gap-3">
             <button
@@ -91,7 +92,7 @@ function App() {
           onCompletedChange={setShowCompleted}
         />
 
-        <div className="flex gap-2 mb-4">
+        <div className="mt-5 flex gap-2 mb-4">
           <button
             className={`px-4 py-2 rounded-md font-medium transition-colors ${activeTab === 'active' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`}
             onClick={() => setActiveTab('active')}
@@ -101,7 +102,7 @@ function App() {
             onClick={() => setActiveTab('archived')}
           >Archivadas</button>
         </div>
-        <main className="mt-6">
+        <main className="mt-1">
           <TaskList tasks={filteredTasks} onToggleTask={handleToggleTask} onArchiveTask={async (id, archived) => {
             // Actualiza en Firebase y refresca la lista
             const { updateTaskArchive } = await import('./lib/tasks');

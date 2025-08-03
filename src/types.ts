@@ -7,4 +7,5 @@ export interface Task {
   cost?: number;
   time?: number;
   archived?: boolean;
+  createdAt: number;
 }

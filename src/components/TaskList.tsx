@@ -123,7 +123,7 @@ export default function TaskList({ tasks, onToggleTask, onArchiveTask }: TaskLis
               <span className="text-sm font-medium">{task.category}</span>x
             </div>
             {/* Botón archivar/desarchivar */}
-            {typeof task.archived !== 'undefined' && onArchiveTask && (
+            {onArchiveTask && (
               <button
                 className={clsx('ml-2 px-2 py-1 rounded text-xs font-medium',
                   task.archived ? 'bg-gray-300 text-gray-700' : 'bg-indigo-100 text-indigo-800 hover:bg-indigo-200')}
