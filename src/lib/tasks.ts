@@ -1,3 +1,21 @@
+import { onValue } from 'firebase/database';
+
+export function subscribeTasks(callback: (tasks: Task[]) => void) {
+  const tasksQuery = query(ref(db, 'tasks'), orderByChild('createdAt'));
+  const unsubscribe = onValue(tasksQuery, (snapshot) => {
+    const tasks: Task[] = [];
+    snapshot.forEach((childSnapshot) => {
+      const data = childSnapshot.val();
+      tasks.push({
+        id: childSnapshot.key,
+        ...data,
+        createdAt: data.createdAt ?? 0
+      });
+    });
+    callback(tasks.reverse());
+  });
+  return unsubscribe;
+}
 
 import { ref, get, set, update, push,query, orderByChild } from 'firebase/database';
 import { db } from './firebase';

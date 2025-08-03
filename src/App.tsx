@@ -4,7 +4,7 @@ import TaskForm from './components/TaskForm';
 import TaskList from './components/TaskList';
 import PriorityFilter from './components/PriorityFilter';
 import { Task } from './types';
-import { addTask, getTasks, toggleTask } from './lib/tasks';
+import { addTask, getTasks, toggleTask, subscribeTasks } from './lib/tasks';
 import StatsModal from './components/StatsModal';
 
 function App() {
@@ -23,7 +23,8 @@ function App() {
   };
 
   useEffect(() => {
-    fetchTasks();
+    const unsubscribe = subscribeTasks(setTasks);
+    return () => unsubscribe && unsubscribe();
   }, []);
 
   const handleAddTask = async (task: Omit<Task, 'id' | 'completed'>) => {
