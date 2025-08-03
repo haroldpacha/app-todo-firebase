@@ -120,7 +120,7 @@ export default function TaskList({ tasks, onToggleTask, onArchiveTask }: TaskLis
               )}
             >
               {getCategoryIcon(task.category)}
-              <span className="text-sm font-medium">{task.category}</span>
+              <span className="text-sm font-medium">{task.category}</span>x
             </div>
             {/* Botón archivar/desarchivar */}
             {typeof task.archived !== 'undefined' && onArchiveTask && (

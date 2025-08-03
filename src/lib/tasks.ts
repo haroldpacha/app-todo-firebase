@@ -1,3 +1,7 @@
+export async function updateTaskArchive(id: string, archived: boolean): Promise<void> {
+  const taskRef = ref(db, `tasks/${id}`);
+  await update(taskRef, { archived });
+}
 import { ref, get, set, update, push } from 'firebase/database';
 import { db } from './firebase';
 import { Task } from '../types';
@@ -6,7 +10,7 @@ const tasksRef = ref(db, 'tasks');
 
 export async function addTask(task: Omit<Task, 'id'>): Promise<Task> {
   const newTaskRef = push(tasksRef);
-  const newTask = { ...task, id: newTaskRef.key };
+  const newTask = { ...task, id: newTaskRef.key ?? '' };
   await set(newTaskRef, newTask);
   return newTask;
 }

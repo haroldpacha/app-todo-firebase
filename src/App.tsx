@@ -103,8 +103,10 @@ function App() {
         </div>
         <main className="mt-6">
           <TaskList tasks={filteredTasks} onToggleTask={handleToggleTask} onArchiveTask={async (id, archived) => {
-            // Aquí deberías implementar la lógica para archivar/desarchivar en tu backend
-            setTasks(tasks => tasks.map(task => task.id === id ? { ...task, archived } : task));
+            // Actualiza en Firebase y refresca la lista
+            const { updateTaskArchive } = await import('./lib/tasks');
+            await updateTaskArchive(id, archived);
+            await fetchTasks();
           }} />
         </main>
 
